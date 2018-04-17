@@ -6,7 +6,7 @@ Assert code taken from http://php.net/manual/en/function.assert.php
 */
 
 include('mainPageStats.php');
-$table_name = "XXXXXX";
+$table_name = "ArduinoTest";
 
 // Create a handler function
 function my_assert_handler($file, $line, $code, $desc = null)

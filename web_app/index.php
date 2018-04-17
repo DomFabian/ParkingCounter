@@ -1,6 +1,16 @@
 <?php
     include('mainPageStats.php');
 ?>
+<script>
+    $(document).ready(function(){    
+    loadmain();
+});
+
+function loadmain(){
+    $("#main").load("index.php");
+    setTimeout(loadmain, 2000);
+}
+</script>
 <html>
     <head>
         <style>

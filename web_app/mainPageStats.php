@@ -1,6 +1,6 @@
 <?php
 	include('db_connection.php');
-    $table_name = "XXXXXX";
+    $table_name = "ArduinoTest";
 	
 	//Grabs number of people and timestamp for all time 
 	function peopleAllTime() {
