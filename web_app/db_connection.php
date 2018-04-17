@@ -6,9 +6,9 @@ class DbConnection
     var $debug;
     
     var $db="database.cse.tamu.edu";
-    var $dbname="XXXXXX";
-    var $user="XXXXXX";
-    var $pass="XXXXXX";
+    var $dbname="domfabian1";
+    var $user="domfabian1";
+    var $pass="\$\$\$pass\$\$\$word\$\$\$";
 
 
             
