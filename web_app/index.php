@@ -2,7 +2,7 @@
     include('mainPageStats.php');
 ?>
 <script>
-    $(document).ready(function(){    
+    $(document).ready(function(){
     loadmain();
 });
 
@@ -41,7 +41,7 @@ function loadmain(){
             <button onclick="location.href='admin.php'">Admin Login</button>
             <form action="" method="get">
                 <p class="timeframe-selector">
-                    Number of people in the past: 
+                    Number of people in the past:
                     <select name="past_timeframe">
                       <option value="">Select an Option</option>
                       <option value="hour" <?php if ($_GET['past_timeframe'] == 'hour') echo 'selected="selected"';?>>
@@ -65,51 +65,51 @@ function loadmain(){
             </form>
 
             <p>
-                <?php 
+                <?php
                     if(isset($_GET['past_timeframe'])) {
                         switch ($_GET['past_timeframe']) {
                             case "hour":
-                                $num_people = numPeopleHour();
-                                $people = peopleHour();
+                                $num_people = peopleCount("hour");
+                                $people = peopleStats("hour");
                                 if(empty($num_people)) {
                                     $num_people = 0;
                                 }
                                 echo "<p>Number of people in the past hour: ".$num_people."</p>";
                                 break;
                             case "day":
-                                    $num_people = numPeopleDay();
-                                    $people = peopleDay();
+                                    $num_people = peopleCount("day");
+                                    $people = peopleStats("day");
                                     if(empty($num_people)) {
                                         $num_people = 0;
                                     }
                                     echo "<p>Number of people in the past day: ".$num_people."</p>";
                                 break;
                             case "month":
-                                    $num_people = numPeopleMonth();
-                                    $people = peopleMonth();
+                                    $num_people = peopleCount("month");
+                                    $people = peopleStats("month");
                                     if(empty($num_people)) {
                                         $num_people = 0;
                                     }
                                     echo "<p>Number of people in the past month: ".$num_people."</p>";
                                 break;
                             case "year":
-                                    $num_people = numPeopleYear();
-                                    $people = peopleYear();
+                                    $num_people = peopleCount("year");
+                                    $people = peopleStats("year");
                                     if(empty($num_people)) {
                                         $num_people = 0;
                                     }
                                     echo "<p>Number of people in the past year: ".$num_people."</p>";
                                 break;
                             case "all_time":
-                                $num_people = numPeopleAllTime();
-                                $people = peopleAllTime();
+                                $num_people = peopleCount("all");
+                                $people = peopleStats("all");
                                 if(empty($num_people)) {
                                     $num_people = 0;
                                 }
                                 echo "<p>Number of people all time: ".$num_people."</p>";
                                 break;
                         }
-                    }   
+                    }
                 ?>
             </p>
 
@@ -117,7 +117,7 @@ function loadmain(){
 
 
             <form action="" method="get">
-                <p class="timeframe-selector">View statistics by: 
+                <p class="timeframe-selector">View statistics by:
                     <select name="stat_timeframe">
                       <option value="">Select an Option</option>
                       <option value="hour" <?php if ($_GET['stat_timeframe'] == 'hour') echo 'selected="selected"';?>>
@@ -138,7 +138,7 @@ function loadmain(){
             </form>
 
             <p class="stats">
-                <?php 
+                <?php
                     if(isset($_GET['stat_timeframe'])) {
                         switch ($_GET['stat_timeframe']) {
                             case "hour":
@@ -154,7 +154,7 @@ function loadmain(){
                                 include("year.php");
                                 break;
                         }
-                    }   
+                    }
                 ?>
             </p>
 
@@ -162,7 +162,7 @@ function loadmain(){
 
 
             <form action="" method="get">
-                <p class="timeframe-selector">Get number of people between 
+                <p class="timeframe-selector">Get number of people between
                     <input type="datetime-local" value="<?php echo $_GET['start'] ?>" name="start">
                     and
                     <input type="datetime-local" value="<?php echo $_GET['end'] ?>" name="end">
