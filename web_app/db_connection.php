@@ -1,26 +1,26 @@
 <?php
 
 class DbConnection
-{   
+{
     var $conn;
     var $debug;
-    
+
     var $db="database.cse.tamu.edu";
     var $dbname="domfabian1";
     var $user="domfabian1";
     var $pass="\$\$\$pass\$\$\$word\$\$\$";
 
 
-            
+
     function DbConnection($debug)
     {
-        $this->debug = $debug; 
-        $rs = $this->connect(); 
+        $this->debug = $debug;
+        $rs = $this->connect();
         return $rs;
     }
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-    
+
     function connect()
     {
         // connect to MySQL DB Server
@@ -35,10 +35,10 @@ class DbConnection
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-    function executeQuery($sql) 
+    function executeQuery($sql)
     {
         if($this->debug == true) { echo("$sql <br>\n"); }
-        $rs = $this->conn->query($sql); 
+        $rs = $this->conn->query($sql);
         return $rs;
     }
 
@@ -46,9 +46,9 @@ class DbConnection
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
     function disconnect() {
-        $this->conn = null;           
+        $this->conn = null;
     }
 
-} 
+}
 
 ?>

@@ -4,77 +4,79 @@
 
 //Combines all functions from the original file that retrieve count and timestamp for month, day, etc.
 //Takes a string argument that is the period of time
-		function peopleStats($period){
-			global $table_name;
-					$debug = false;
-			$DB_CONNECTION = new DbConnection($debug);
-			if(gettype($period) != "string") {
-					// Error.
-					return 0;
-			}
-			switch($period)
-			{
-				case all:
-					$people="SELECT num_people, timestamp from `".$table_name."`.`Counter`";
-					break;
-				case year:
-					$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < timestamp";
-					break;
-				case month:
-					$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < timestamp";
-					break;
-				case week:
-					$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 7 DAY) < timestamp";
-					break;
-				case day:
-					$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < timestamp";
-					break;
-				case hour:
-					$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE timestamp >= DATE_SUB(NOW(),INTERVAL 1 HOUR);";
-					break;
-				default:
-					echo "Invalid time period";
-					return 0;
-					break;
-			}
-			$people_query=$DB_CONNECTION->executeQuery($people, $_SERVER["SCRIPT_NAME"]);
-			$DB_CONNECTION->disconnect();
-			return $people_query;
+	function peopleStats($period){
+		global $table_name;
+				$debug = false;
+		$DB_CONNECTION = new DbConnection($debug);
+		if(gettype($period) != "string") {
+				// Error.
+				return 0;
 		}
-
-		function peopleCount($period){
-			global $table_name;
-			$debug = false;
-			$DB_CONNECTION = new DbConnection($debug);
-			if(gettype($period) != "string") {
-					// Error.
-					return 0;
-			}
-			switch($period)
-			{
-				case all:
-					$people="SELECT count(*) from `".$table_name."`.`Counter`";
-					break;
-				case year:
-					$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < timestamp";
-					break;
-				case month:
-					$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < timestamp";
-					break;
-				case day:
-					$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < timestamp";
-					break;
-				case hour:
-					$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 HOUR) < timestamp";
-					break;
-			}
-			$people_query = $DB_CONNECTION->executeQuery($total_people, $_SERVER["SCRIPT_NAME"]);
-			$result = $people_query->fetch();
-			$people_count = $result[0];
-			$DB_CONNECTION->disconnect();
-
-			return $people_count;
+		switch($period)
+		{
+			case 'all':
+				$people="SELECT num_people, timestamp from `".$table_name."`.`Counter`";
+				break;
+			case 'year':
+				$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < timestamp";
+				break;
+			case 'month':
+				$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < timestamp";
+				break;
+			case 'week':
+				$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 7 DAY) < timestamp";
+				break;
+			case 'day':
+				$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < timestamp";
+				break;
+			case 'hour':
+				$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE timestamp >= DATE_SUB(NOW(),INTERVAL 1 HOUR);";
+				break;
+			default:
+				echo "Invalid time period";
+				return 0;
+				break;
 		}
+		$people_query=$DB_CONNECTION->executeQuery($people, $_SERVER["SCRIPT_NAME"]);
+		$DB_CONNECTION->disconnect();
+		return $people_query;
+	}
+
+//Combines all functions from the original file that retrieve just the count for a given time period
+//Takes a string argument that is the period of time
+	function peopleCount($period){
+		global $table_name;
+		$debug = false;
+		$DB_CONNECTION = new DbConnection($debug);
+		if(gettype($period) != "string") {
+				// Error.
+				return 0;
+		}
+		switch($period)
+		{
+			case 'all':
+				$people="SELECT count(*) from `".$table_name."`.`Counter`";
+				break;
+			case 'year':
+				$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < timestamp";
+				break;
+			case 'month':
+				$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < timestamp";
+				break;
+			case 'day':
+				$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < timestamp";
+				break;
+			case 'hour':
+				$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 HOUR) < timestamp";
+				break;
+		}
+		$people_query = $DB_CONNECTION->executeQuery($people, $_SERVER["SCRIPT_NAME"]);
+		$result = $people_query->fetch();
+		$people_count = $result[0];
+		$DB_CONNECTION->disconnect();
+
+		return $people_count;
+	}
 
     // Returns the number of people within each timeframe
     // example: if $timeframe == 'month', it will return the total number of people counted in each month.
@@ -85,7 +87,7 @@
             // Error.
             return 0;
         }
-        $people_all_time = peopleAllTime();
+        $people_all_time = peopleStats('all');
         switch ($timeframe) {
             case 'hour':
                 $sql = "SELECT COUNT(*) AS count, HOUR(`timestamp`) AS hour FROM `".$table_name."`.`Counter` GROUP BY HOUR(`timestamp`)";
@@ -99,6 +101,9 @@
             case 'year':
                 $sql = "SELECT COUNT(*) as count, YEAR(`timestamp`) as year FROM `".$table_name."`.`Counter` GROUP BY YEAR(`timestamp`)";
                 break;
+						default:
+							echo "Error";
+							return 0;
         }
         $debug = false;
         $DB_CONNECTION = new DbConnection($debug);
