@@ -1,154 +1,82 @@
 <?php
 	include('db_connection.php');
-    $table_name = "ArduinoTest";
-	
-	//Grabs number of people and timestamp for all time 
-	function peopleAllTime() {
-		global $table_name;
-        $debug = false;
-		$DB_CONNECTION = new DbConnection($debug);
-		$total_people = "SELECT num_people, timestamp from `".$table_name."`.`Counter`";
-		$total_people_query = $DB_CONNECTION->executeQuery($total_people, $_SERVER["SCRIPT_NAME"]);
-		$DB_CONNECTION->disconnect();
+    $table_name = "CarDatabase";
 
-		return $total_people_query;
-	}
+//Combines all functions from the original file that retrieve count and timestamp for month, day, etc.
+//Takes a string argument that is the period of time
+		function peopleStats($period){
+			global $table_name;
+					$debug = false;
+			$DB_CONNECTION = new DbConnection($debug);
+			if(gettype($period) != "string") {
+					// Error.
+					return 0;
+			}
+			switch($period)
+			{
+				case all:
+					$people="SELECT num_people, timestamp from `".$table_name."`.`Counter`";
+					break;
+				case year:
+					$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < timestamp";
+					break;
+				case month:
+					$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < timestamp";
+					break;
+				case week:
+					$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 7 DAY) < timestamp";
+					break;
+				case day:
+					$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < timestamp";
+					break;
+				case hour:
+					$people="SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE timestamp >= DATE_SUB(NOW(),INTERVAL 1 HOUR);";
+					break;
+				default:
+					echo "Invalid time period";
+					return 0;
+					break;
+			}
+			$people_query=$DB_CONNECTION->executeQuery($people, $_SERVER["SCRIPT_NAME"]);
+			$DB_CONNECTION->disconnect();
+			return $people_query;
+		}
 
-	//Grabs number of people and timestamp for past year
-	function peopleYear() {
-		global $table_name;
-        $debug = false;
-		$DB_CONNECTION = new DbConnection($debug);
-		$total_people_year = "SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < timestamp";
-		$total_people_year_query = $DB_CONNECTION->executeQuery($total_people_year, $_SERVER["SCRIPT_NAME"]);
-		$DB_CONNECTION->disconnect();
+		function peopleCount($period){
+			global $table_name;
+			$debug = false;
+			$DB_CONNECTION = new DbConnection($debug);
+			if(gettype($period) != "string") {
+					// Error.
+					return 0;
+			}
+			switch($period)
+			{
+				case all:
+					$people="SELECT count(*) from `".$table_name."`.`Counter`";
+					break;
+				case year:
+					$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < timestamp";
+					break;
+				case month:
+					$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < timestamp";
+					break;
+				case day:
+					$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < timestamp";
+					break;
+				case hour:
+					$people="SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 HOUR) < timestamp";
+					break;
+			}
+			$people_query = $DB_CONNECTION->executeQuery($total_people, $_SERVER["SCRIPT_NAME"]);
+			$result = $people_query->fetch();
+			$people_count = $result[0];
+			$DB_CONNECTION->disconnect();
 
-		return $total_people_year_query;
-	}
+			return $people_count;
+		}
 
-
-	//Grabs number of people and timestamp for past month
-	function peopleMonth() {
-		global $table_name;
-        $debug = false;
-		$DB_CONNECTION = new DbConnection($debug);
-		$total_people_month = "SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < timestamp";
-		$total_people_month_query = $DB_CONNECTION->executeQuery($total_people_month, $_SERVER["SCRIPT_NAME"]);
-		$DB_CONNECTION->disconnect();
-
-		return $total_people_month_query;
-	}
-
-
-	//Grabs number of people and timestamp for past week
-	function peopleWeek() {
-		global $table_name;
-        $debug = false;
-		$DB_CONNECTION = new DbConnection($debug);
-		$total_people_week = "SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 7 DAY) < timestamp";
-		$total_people_week_query = $DB_CONNECTION->executeQuery($total_people_week, $_SERVER["SCRIPT_NAME"]);
-	    $DB_CONNECTION->disconnect();
-
-		return $total_people_week_query;
-	}
-
-
-	//Grabs number of people and timestamp for past day
-	function peopleDay() {
-		global $table_name;
-        $debug = false;
-		$DB_CONNECTION = new DbConnection($debug);
-		$total_people_day = "SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < timestamp";
-		$total_people_day_query = $DB_CONNECTION->executeQuery($total_people_day, $_SERVER["SCRIPT_NAME"]);
-		$DB_CONNECTION->disconnect();
-
-		return $total_people_day_query;
-	}
-
-    //Grabs number of people and timestamp for past hour
-    function peopleHour() {
-        global $table_name;
-        $debug = false;
-        $DB_CONNECTION = new DbConnection($debug);
-        $total_people_hour = "SELECT num_people, timestamp FROM `".$table_name."`.`Counter` WHERE timestamp >= DATE_SUB(NOW(),INTERVAL 1 HOUR);";
-        $total_people_hour_query = $DB_CONNECTION->executeQuery($total_people_hour, $_SERVER["SCRIPT_NAME"]);
-        $DB_CONNECTION->disconnect();
-
-        return $total_people_hour_query;
-    }
-
-    //Grabs number of people who entered for all time
-    function numPeopleAllTime() {
-        global $table_name;
-        $debug = false;
-        $DB_CONNECTION = new DbConnection($debug);
-        $total_people = "SELECT count(*) from `".$table_name."`.`Counter`";
-        $total_people_query = $DB_CONNECTION->executeQuery($total_people, $_SERVER["SCRIPT_NAME"]);
-        $result = $total_people_query->fetch();
-        $total_people_count = $result[0];
-        $DB_CONNECTION->disconnect();
-
-        return $total_people_count;
-    }
-
-
-    //Grabs number of people who have entered for past year
-    function numPeopleYear() {
-        global $table_name;
-        $debug = false;
-        $DB_CONNECTION = new DbConnection($debug);
-        $total_people_year = "SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < timestamp";
-        $total_people_year_query = $DB_CONNECTION->executeQuery($total_people_year, $_SERVER["SCRIPT_NAME"]);
-        $result = $total_people_year_query->fetch();
-        $total_people_year_count = $result[0];
-        $DB_CONNECTION->disconnect();
-
-        return $total_people_year_count;
-    }
-
-    //Grabs number of people who have entered for past month
-    function numPeopleMonth() {
-        global $table_name;
-        $debug = false;
-        $DB_CONNECTION = new DbConnection($debug);
-        $total_people_month = "SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < timestamp";
-        $total_people_month_query = $DB_CONNECTION->executeQuery($total_people_month, $_SERVER["SCRIPT_NAME"]);
-        $result = $total_people_month_query->fetch();
-        $total_people_month_count = $result[0];
-        $DB_CONNECTION->disconnect();
-
-        return $total_people_month_count;
-    }
-
-    //Grabs number of people who have entered for past day
-    function numPeopleDay() {
-        global $table_name;
-        $debug = false;
-        $DB_CONNECTION = new DbConnection($debug); 
-        $total_people_day = "SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < timestamp";
-        $total_people_day_query = $DB_CONNECTION->executeQuery($total_people_day, $_SERVER["SCRIPT_NAME"]);
-        $result = $total_people_day_query->fetch();
-        $total_people_day_count = $result[0];
-        $DB_CONNECTION->disconnect();
-
-        return $total_people_day_count;
-    }
-
-    //Grabs number of people who have entered for past hour
-    function numPeopleHour() {
-        global $table_name;
-        $debug = false;
-        $DB_CONNECTION = new DbConnection($debug); 
-        $total_people_hour = "SELECT count(*) FROM `".$table_name."`.`Counter` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 HOUR) < timestamp";
-        $total_people_hour_query = $DB_CONNECTION->executeQuery($total_people_hour, $_SERVER["SCRIPT_NAME"]);
-        $result = $total_people_hour_query->fetch();
-        $total_people_hour_count = $result[0];
-        $DB_CONNECTION->disconnect();
-
-        return $total_people_hour_count;
-    }
-
-    // Returns the number of people within each timeframe 
+    // Returns the number of people within each timeframe
     // example: if $timeframe == 'month', it will return the total number of people counted in each month.
     // This is used for getting statistical functions for certain timeframes.
     function get_num_people_for_every($timeframe) {
@@ -219,7 +147,7 @@
         foreach($pdo_statement as $row) {
             array_push($count_array, $row[0]);
         }
-        $values = array_count_values($count_array); 
+        $values = array_count_values($count_array);
         $mode = array_search(max($values), $values);
         return $mode;
     }

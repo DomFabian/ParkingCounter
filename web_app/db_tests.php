@@ -1,12 +1,12 @@
 <?php
 /*
-Tests various db connection functions. 
+Tests various db connection functions.
 
 Assert code taken from http://php.net/manual/en/function.assert.php
 */
 
 include('mainPageStats.php');
-$table_name = "ArduinoTest";
+$table_name = "CarDatabase";
 
 // Create a handler function
 function my_assert_handler($file, $line, $code, $desc = null)
@@ -25,7 +25,7 @@ assert_options(ASSERT_QUIET_EVAL, 1);
 assert_options(ASSERT_CALLBACK, 'my_assert_handler'); // Set up the callback
 
 
-function test_db_connection() 
+function test_db_connection()
 {
     // Tests that the function successfully connects to MySQL db.
     $debug = true;
@@ -72,9 +72,9 @@ function test_db_query_should_fail()
 }
 
 
-function test_people_all_time() {
+function test_peopleStats() {
     // Tests the 'peopleAllTime()' function by asserting that the array it return is non empty
-    $all_people = peopleAllTime();
+    $all_people = peopleStats("all");
     if(assert($all_people != array())) {
         echo "TEST PASSED.";
     } else {
@@ -82,39 +82,9 @@ function test_people_all_time() {
     }
 }
 
-function test_people_year() {
+function test_peopleCount() {
     // Tests the 'peopleYear()' function by asserting that the array it return is non empty
-    $all_people = peopleYear();
-    if(assert($all_people != array())) {
-        echo "TEST PASSED.";
-    } else {
-        echo "ERROR TEST FAILED.";
-    }
-}
-
-function test_people_month() {
-    // Tests the 'peopleMonth()' function by asserting that the array it return is non empty
-    $all_people = peopleMonth();
-    if(assert($all_people != array())) {
-        echo "TEST PASSED.";
-    } else {
-        echo "ERROR TEST FAILED.";
-    }
-}
-
-function test_people_day() {
-    // Tests the 'peopleDay()' function by asserting that the array it return is non empty
-    $all_people = peopleDay();
-    if(assert($all_people != array())) {
-        echo "TEST PASSED.";
-    } else {
-        echo "ERROR TEST FAILED.";
-    }
-}
-
-function test_people_hour() {
-    // Tests the 'peopleHour()' function by asserting that the array it return is non empty
-    $all_people = peopleHour();
+    $all_people = peopleCount("all");
     if(assert($all_people != array())) {
         echo "TEST PASSED.";
     } else {
@@ -134,7 +104,7 @@ function test_get_stats() {
         assert(is_scalar($median_people)) &&
         assert(is_scalar($mode_people)) &&
         assert(is_scalar($max_people[0])) &&
-        assert(is_scalar($min_people[0]))) 
+        assert(is_scalar($min_people[0])))
     {
         echo "TEST PASSED.";
     } else {

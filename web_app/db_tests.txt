@@ -1,12 +1,12 @@
 <?php
 /*
-Tests various db connection functions. 
+Tests various db connection functions.
 
 Assert code taken from http://php.net/manual/en/function.assert.php
 */
 
 include('mainPageStats.php');
-$table_name = "ArduinoTest";
+$table_name = "CarDatabase";
 
 // Create a handler function
 function my_assert_handler($file, $line, $code, $desc = null)
@@ -25,7 +25,7 @@ assert_options(ASSERT_QUIET_EVAL, 1);
 assert_options(ASSERT_CALLBACK, 'my_assert_handler'); // Set up the callback
 
 
-function test_db_connection() 
+function test_db_connection()
 {
     // Tests that the function successfully connects to MySQL db.
     $debug = true;
@@ -134,7 +134,7 @@ function test_get_stats() {
         assert(is_scalar($median_people)) &&
         assert(is_scalar($mode_people)) &&
         assert(is_scalar($max_people[0])) &&
-        assert(is_scalar($min_people[0]))) 
+        assert(is_scalar($min_people[0])))
     {
         echo "TEST PASSED.";
     } else {
