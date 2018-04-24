@@ -1,6 +1,9 @@
 {
     "python.linting.pylintEnabled": false,
     "files.associations": {
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "iosfwd": "cpp",
+        "xmemory0": "cpp",
+        "system_error": "cpp"
     }
 }
