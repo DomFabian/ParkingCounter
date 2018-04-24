@@ -42,9 +42,10 @@ function test_db_query_should_pass()
 {
     // Tests that a valid query successfully executes.
     $debug = true;
+    global $table_name;
     $DB_CONNECTION = new DbConnection($debug);
 
-    $good_sql = "SELECT * FROM `".$table_name."`.`Counter`;";
+    $good_sql = "SELECT count FROM {$table_name}";
     $passing_query = $DB_CONNECTION->executeQuery($good_sql, $_SERVER["SCRIPT_NAME"]);
     if(assert($passing_query)) {
         $total_people = 0;
@@ -60,8 +61,8 @@ function test_db_query_should_fail()
     // Tests a failing query.
     $debug = true;
     $DB_CONNECTION = new DbConnection($debug);
-
-    $bad_sql = "SELECT * FROM `".$table_name."`.`Counter` WHERE `invalid_column` = 3";
+    global $table_name;
+    $bad_sql = "SELECT * FROM `".$table_name."`.`count` WHERE `invalid_column` = 3";
     $failing_query = $DB_CONNECTION->executeQuery($bad_sql, $_SERVER["SCRIPT_NAME"]);
     echo $failing_query;
     if(!assert($failing_query)) {
