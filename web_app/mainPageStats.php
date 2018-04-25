@@ -15,22 +15,22 @@
 		switch($period)
 		{
 			case 'all':
-				$people="SELECT num_people, time from `".$table_name."`.`count`";
+                $people="SELECT count, time from {$table_name}";
 				break;
 			case 'year':
-				$people="SELECT num_people, time FROM `".$table_name."`.`count` WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < time";
+				$people="SELECT count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < time";
 				break;
 			case 'month':
-				$people="SELECT num_people, time FROM `".$table_name."`.`count` WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < time";
+				$people="SELECT count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < time";
 				break;
 			case 'week':
-				$people="SELECT num_people, time FROM `".$table_name."`.`count` WHERE (CURRENT_TIMESTAMP - INTERVAL 7 DAY) < time";
+				$people="SELECT count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 7 DAY) < time";
 				break;
 			case 'day':
-				$people="SELECT num_people, time FROM `".$table_name."`.`count` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < time";
+				$people="SELECT count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < time";
 				break;
 			case 'hour':
-				$people="SELECT num_people, time FROM `".$table_name."`.`count` WHERE time >= DATE_SUB(NOW(),INTERVAL 1 HOUR);";
+				$people="SELECT count, time FROM {$table_name} WHERE time >= DATE_SUB(NOW(),INTERVAL 1 HOUR);";
 				break;
 			default:
 				echo "Invalid time period";
@@ -55,19 +55,20 @@
 		switch($period)
 		{
 			case 'all':
-				$people="SELECT count(*) from `".$table_name."`.`count`";
+//				$people="SELECT count(*) from `".$table_name."`.`count`";
+                $people="SELECT count(*) from {$table_name}";
 				break;
 			case 'year':
-				$people="SELECT count(*) FROM `".$table_name."`.`count` WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < time";
+				$people="SELECT count(*) FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < time";
 				break;
 			case 'month':
-				$people="SELECT count(*) FROM `".$table_name."`.`count` WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < time";
+				$people="SELECT count(*) FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < time";
 				break;
 			case 'day':
-				$people="SELECT count(*) FROM `".$table_name."`.`count` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < time";
+				$people="SELECT count(*) FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < time";
 				break;
 			case 'hour':
-				$people="SELECT count(*) FROM `".$table_name."`.`count` WHERE (CURRENT_TIMESTAMP - INTERVAL 1 HOUR) < time";
+				$people="SELECT count(*) FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 1 HOUR) < time";
 				break;
 		}
 		$people_query = $DB_CONNECTION->executeQuery($people, $_SERVER["SCRIPT_NAME"]);
@@ -90,16 +91,16 @@
         $people_all_time = peopleStats('all');
         switch ($timeframe) {
             case 'hour':
-                $sql = "SELECT COUNT(*) AS count, HOUR(`time`) AS hour FROM `".$table_name."`.`count` GROUP BY HOUR(`time`)";
+                $sql = "SELECT COUNT(*) AS count, HOUR(`time`) AS hour FROM {$table_name} GROUP BY HOUR(`time`)";
                 break;
             case 'day':
-                $sql = "SELECT COUNT(*) as count, DATE(`time`) as day FROM `".$table_name."`.`count` GROUP BY DATE(`time`)";
+                $sql = "SELECT COUNT(*) as count, DATE(`time`) as day FROM {$table_name} GROUP BY DATE(`time`)";
                 break;
             case 'month':
-                $sql = "SELECT COUNT(*) as count, MONTH(`time`) as month FROM `".$table_name."`.`count` GROUP BY MONTH(`time`)";
+                $sql = "SELECT COUNT(*) as count, MONTH(`time`) as month FROM {$table_name} GROUP BY MONTH(`time`)";
                 break;
             case 'year':
-                $sql = "SELECT COUNT(*) as count, YEAR(`time`) as year FROM `".$table_name."`.`count` GROUP BY YEAR(`time`)";
+                $sql = "SELECT COUNT(*) as count, YEAR(`time`) as year FROM {$table_name} GROUP BY YEAR(`time`)";
                 break;
 						default:
 							echo "Error";
@@ -192,7 +193,7 @@
         global $table_name;
         $debug = false;
         $DB_CONNECTION = new DbConnection($debug);
-        $num_people_between = "SELECT count(*) FROM `".$table_name."`.`count` WHERE time BETWEEN '".$start."' AND '".$end."'";
+        $num_people_between = "SELECT count(*) FROM {$table_name} WHERE time BETWEEN '".$start."' AND '".$end."'";
         $num_people_between_query = $DB_CONNECTION->executeQuery($num_people_between, $_SERVER["SCRIPT_NAME"]);
         $result = $num_people_between_query->fetch();
         $num_people_between_count = $result[0];
@@ -204,7 +205,7 @@
     //Adds entry into database
     function add_entry($num_people, $timestamp) {
         global $table_name;
-        $sql = "INSERT INTO `".$table_name."`.`count` (num_people, timestamp) VALUES ('".$num_people."', '".$timestamp."')";
+        $sql = "INSERT INTO {$table_name} (time) VALUES ('".$timestamp."')";
         $debug = false;
         $DB_CONNECTION = new DbConnection($debug);
         $DB_CONNECTION->executeQuery($sql);
