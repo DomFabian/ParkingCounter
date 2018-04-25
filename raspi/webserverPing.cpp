@@ -1,21 +1,14 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-
-#include <string>
-#include <iostream>
-#include <sstream>
+#include "My_Socket.h"
 
 int sendWebserverPing(std::string host, std::string path, std::string secret_key) {
     /* This function hits the webserver with a POST request so that it
        knows to make a database entry. 
        Returns -1 if unable to create socket */
 
+    My_Socket c;
+    int port = 80;
+    
+    // create the message
     // payload of actual data being POSTed to webserver
     std::string payload = "key=" + secret_key + "&submit=Submit+Query";
 
@@ -34,65 +27,23 @@ int sendWebserverPing(std::string host, std::string path, std::string secret_key
     msg += "\r\n";
     msg += payload;
 
-    std::cout << "Send message:\n\n" << msg << std::endl;
+    std::cout << "Send message:\n" << msg << std::endl;
 
-    // prepare to create socket
-    int sockfd, port, n;
-    struct sockaddr_in serv_addr;
-    struct hostent *server;
-    char buffer[256];
-
-    // create socket
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-
-    if (sockfd < 0) {
-        // error opening socket
+    // connect to the host
+    if (!c.conn(host, port))
         return -1;
-    }
-
-    // get the IP address of the hostname
-    server = gethostbyname(host.c_str());
-
-    if (server == NULL) {
-        // no such host by that name
+     
+    // send the data
+    if (!c.send_data(msg))
         return -2;
-    }
-
-    bzero((char*)&serv_addr, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    bcopy((char*)server->h_addr, (char*)&serv_addr.sin_addr.s_addr, server->h_length);
-    serv_addr.sin_port = htons(port);
-
-    if (connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
-        //error connecting to webserver
+     
+    // receive the response from the webserver
+    std::string reply = c.receive(1024);
+    if (reply == "")
         return -3;
-    }
 
-    // send the POST request
-    n = write(sockfd, msg.c_str(), msg.length());
+    std::cout << reply << std::endl;
 
-    if (n < 0) {
-         //error writing to socket
-         return -4;
-    }
-
-    // empty the buffer
-    bzero(buffer, 256);
-
-    // put the server's response in the buffer
-    n = read(sockfd, buffer, 255);
-    
-    if (n < 0) {
-        // error reading from socket
-        return -5;
-    }
-
-    printf("%s\n", buffer);
-
-    // close the socket
-    close(sockfd);
-
-    // success case
     return 1;
 }
 
