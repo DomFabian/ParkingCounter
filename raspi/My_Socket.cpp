@@ -1,3 +1,16 @@
+/*****************************************
+** File:    My_Socket.cpp
+** Project: CSCE 315 Project 2, Spring 2018
+** Author:  Dominick Fabian
+** Email:   dominick@tamu.edu
+** Date:    04/25/18
+** Section: 504
+**
+**   This file contains the functions for the My_Socket
+** class declared in My_Socket.h.
+**
+***********************************************/
+
 #include "My_Socket.h"
 
 // default constructor

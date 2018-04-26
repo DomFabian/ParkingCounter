@@ -1,3 +1,18 @@
+/*****************************************
+** File:    webserverPing.cpp
+** Project: CSCE 315 Project 2, Spring 2018
+** Author:  Dominick Fabian
+** Email:   dominick@tamu.edu
+** Date:    04/25/18
+** Section: 504
+**
+**   This file contains the function used by the Raspberry
+** Pi to send a message to the webserver. This will be used
+** to send the HTTP POST requests needed for entries to be
+** made into the database.
+**
+***********************************************/
+
 #include "My_Socket.h"
 
 int sendWebserverPing(std::string host, std::string path, std::string secret_key) {
