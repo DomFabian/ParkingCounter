@@ -7,8 +7,14 @@
 });
 
 function loadmain(){
-    $("#main").load("index.php");
+    $("#live").load("index.php");
     setTimeout(loadmain, 2000);
+}
+//function update() {
+//    $.get("index.php", function(data) {
+//        $("#live").html(data);
+//        window.setTimeout(update, 10000);
+//    });
 }
 </script>
 <html>
@@ -182,6 +188,18 @@ function loadmain(){
                         }
                     }
                 ?>
+            </p>
+        </div>
+        <div class="live">
+            <p class="livetime">Real-time statistics:
+            <?php
+                $num_people = peopleCount("all");
+                                $people = peopleStats("all");
+                                if(empty($num_people)) {
+                                    $num_people = 0;
+                                }
+                                echo "{$num_people}";
+            ?>
             </p>
         </div>
 

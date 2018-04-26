@@ -15,22 +15,22 @@
 		switch($period)
 		{
 			case 'all':
-                $people="SELECT count, time from {$table_name}";
+                $people="SELECT car_count, time from {$table_name}";
 				break;
 			case 'year':
-				$people="SELECT count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < time";
+				$people="SELECT car_count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 365 DAY) < time";
 				break;
 			case 'month':
-				$people="SELECT count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < time";
+				$people="SELECT car_count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 30 DAY) < time";
 				break;
 			case 'week':
-				$people="SELECT count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 7 DAY) < time";
+				$people="SELECT car_count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 7 DAY) < time";
 				break;
 			case 'day':
-				$people="SELECT count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < time";
+				$people="SELECT car_count, time FROM {$table_name} WHERE (CURRENT_TIMESTAMP - INTERVAL 1 DAY) < time";
 				break;
 			case 'hour':
-				$people="SELECT count, time FROM {$table_name} WHERE time >= DATE_SUB(NOW(),INTERVAL 1 HOUR);";
+				$people="SELECT car_count, time FROM {$table_name} WHERE time >= DATE_SUB(NOW(),INTERVAL 1 HOUR);";
 				break;
 			default:
 				echo "Invalid time period";
@@ -203,7 +203,7 @@
     }
 
     //Adds entry into database
-    function add_entry($num_people, $timestamp) {
+    function add_entry($car_count, $timestamp) {
         global $table_name;
         $sql = "INSERT INTO {$table_name} (time) VALUES ('".$timestamp."')";
         $debug = false;
