@@ -21,7 +21,7 @@ int sendWebserverPing(std::string host, std::string path, std::string secret_key
        Returns -1 if unable to create socket */
 
     My_Socket c;
-    int port = 80;
+    int port = 80; // HTTP
     
     // create the message
     // payload of actual data being POSTed to webserver
@@ -53,7 +53,8 @@ int sendWebserverPing(std::string host, std::string path, std::string secret_key
         return -2;
      
     // receive the response from the webserver
-    std::string reply = c.receive(1024);
+    int numBytes = 1024;
+    std::string reply = c.receive(numBytes);
     if (reply == "")
         return -3;
 
