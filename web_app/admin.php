@@ -33,9 +33,9 @@
 
     if(isset($_POST['new_entry'])) {
         // New entry
-        $num_people = $_POST['num_people'];
+        $car_count = $_POST['car_count'];
         $timestamp = date('Y-m-d H:i:s', strtotime(str_replace('-', '/', $_POST['timestamp'])));
-        if(add_entry($num_people, $timestamp)) {
+        if(add_entry($car_count, $timestamp)) {
             echo "Entry successfully added.<br>";
         } else {
             echo "Error entering entry.<br>";
@@ -49,7 +49,7 @@
             echo "<form action='' method='post'>
                     <p>Add manual entry:<br>
                     <div class='entry'>
-                        <label>Number of people: <input type='text' name=\"num_people\"> 
+                        <label>Number of people: <input type='text' name=\"car_count\"> 
                         <label>Date and Time: </label> <input type='datetime-local' name=\"timestamp\">
                         <input type='submit' name='new_entry'>
                     </div>
