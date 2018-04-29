@@ -47,7 +47,7 @@ function loadmain(){
             <button onclick="location.href='admin.php'">Admin Login</button>
             <form action="" method="get">
                 <p class="timeframe-selector">
-                    Number of people in the past:
+                    Number of cars in the past:
                     <select name="past_timeframe">
                       <option value="">Select an Option</option>
                       <option value="hour" <?php if ($_GET['past_timeframe'] == 'hour') echo 'selected="selected"';?>>
@@ -80,7 +80,7 @@ function loadmain(){
                                 if(empty($num_people)) {
                                     $num_people = 0;
                                 }
-                                echo "<p>Number of people in the past hour: ".$num_people."</p>";
+                                echo "<p>Number of cars in the past hour: ".$num_people."</p>";
                                 break;
                             case "day":
                                     $num_people = peopleCount("day");
@@ -88,7 +88,7 @@ function loadmain(){
                                     if(empty($num_people)) {
                                         $num_people = 0;
                                     }
-                                    echo "<p>Number of people in the past day: ".$num_people."</p>";
+                                    echo "<p>Number of cars in the past day: ".$num_people."</p>";
                                 break;
                             case "month":
                                     $num_people = peopleCount("month");
@@ -96,7 +96,7 @@ function loadmain(){
                                     if(empty($num_people)) {
                                         $num_people = 0;
                                     }
-                                    echo "<p>Number of people in the past month: ".$num_people."</p>";
+                                    echo "<p>Number of cars in the past month: ".$num_people."</p>";
                                 break;
                             case "year":
                                     $num_people = peopleCount("year");
@@ -104,7 +104,7 @@ function loadmain(){
                                     if(empty($num_people)) {
                                         $num_people = 0;
                                     }
-                                    echo "<p>Number of people in the past year: ".$num_people."</p>";
+                                    echo "<p>Number of cars in the past year: ".$num_people."</p>";
                                 break;
                             case "all_time":
                                 $num_people = peopleCount("all");
@@ -112,7 +112,7 @@ function loadmain(){
                                 if(empty($num_people)) {
                                     $num_people = 0;
                                 }
-                                echo "<p>Number of people all time: ".$num_people."</p>";
+                                echo "<p>Number of cars all time: ".$num_people."</p>";
                                 break;
                         }
                     }
@@ -168,7 +168,7 @@ function loadmain(){
 
 
             <form action="" method="get">
-                <p class="timeframe-selector">Get number of people between
+                <p class="timeframe-selector">Get number of cars between
                     <input type="datetime-local" value="<?php echo $_GET['start'] ?>" name="start">
                     and
                     <input type="datetime-local" value="<?php echo $_GET['end'] ?>" name="end">
@@ -184,7 +184,7 @@ function loadmain(){
                         if($start >= $end) {
                             echo "<p class='error'>ERROR: Starting date must come before ending date.</p>";
                         } else {
-                            echo "Number of people between ".$start." and ".$end.": ".num_people_between($start, $end);
+                            echo "Number of cars between ".$start." and ".$end.": ".num_people_between($start, $end);
                         }
                     }
                 ?>
@@ -199,6 +199,16 @@ function loadmain(){
                                     $num_people = 0;
                                 }
                                 echo "{$num_people}";
+            ?>
+            </p>
+            <p>Predicted in the next hour:
+            <?php
+               $ave_people = get_num_people_for_every("hour");
+                if(empty($ave_people)) {
+                    $ave_people = 0;
+                } 
+                $ave = get_ave($ave_people);
+                echo "{$ave}";
             ?>
             </p>
         </div>
