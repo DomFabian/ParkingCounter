@@ -18,10 +18,20 @@
 int sendWebserverPing(std::string host, std::string path, std::string secret_key) {
     /* This function hits the webserver with a POST request so that it
        knows to make a database entry. 
-       Returns -1 if unable to create socket */
+       Returns -1 if unable to create socket 
+       Ths function takes a C++ string for the hostname, path, and secret key used
+       by the Raspberry Pi client for use in creating an HTTP POST request. This 
+       POST request has the effect of triggering a database insertion on the server
+       side.
+       Returns 1 if successful connection and request made.
+       Returns -1 if unable to connect to webserver.
+       Returns -2 if unable to send the data to webserver.
+       Returns -3 if the webserver response was an empty string.
+       Pre-conditions: My_Socket.h is included; compiled with My_Socket.cpp.
+       Post-conditions: HTTP POST request sent and database entry made. */
 
     My_Socket c;
-    int port = 80; // HTTP
+    int port = 80; // for plain old HTTP
     
     // create the message
     // payload of actual data being POSTed to webserver
@@ -42,7 +52,7 @@ int sendWebserverPing(std::string host, std::string path, std::string secret_key
     msg += "\r\n";
     msg += payload;
 
-    std::cout << "Send message:\n" << msg << std::endl;
+    std::cout << "Sent message:\n" << msg << std::endl;
 
     // connect to the host
     if (!c.conn(host, port))
