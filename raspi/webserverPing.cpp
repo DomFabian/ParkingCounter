@@ -26,7 +26,7 @@ int sendWebserverPing(std::string host, std::string path, std::string secret_key
        Returns 1 if successful connection and request made.
        Returns -1 if unable to connect to webserver.
        Returns -2 if unable to send the data to webserver.
-       Returns -3 if the webserver response was an empty string.
+       Returns -3 if the webserver did not respond.
        Pre-conditions: My_Socket.h is included; compiled with My_Socket.cpp.
        Post-conditions: HTTP POST request sent and database entry made. */
 

@@ -17,17 +17,32 @@
 // define pins numbers
 const int trig_pin[2] = {7, 8}; // ultrasonic sensor 1
 const int echo_pin[2] = {9, 10}; // ultrasonic sensor 2
+const int relay_pin = 6;
 
 // define some variables
 const int num_sensors = 2;
-long duration[num_sensors];
+double duration[num_sensors];
 int distance[num_sensors];
 const double speed_of_sound_constant = 0.034;
-const double time_differential_microsec = 10;
+const double time_differential_microsec = 10.0;
+const double distance_threshold = 2000.0;
+
+/* this design will use a finite state machine logic with 
+   3 different states:
+   0 - no motion detected.
+   1 - motion on sensor 1 has been detected.
+   2 - motion on sensor 2 has been detected within the valid
+       time differential (AKA car passed). */
+int state = 0;
 
 bool car_has_passed() {
-    // uses the global variable distance
-    return true;
+    // uses the global variable distance and state
+    if (distance[0] < distance_threshold)
+        state = 1;
+    delayMicroseconds(time_differential_microsec);
+    if (state == 1 && distance[1] < distance_threshold)
+        state = 2;
+    return state == 2;
 }
 
 void setup() {
@@ -45,6 +60,8 @@ void setup() {
 
 void loop() {
 
+    digitalWrite(relay_pin, LOW);
+
     for (int i = 0; i < num_sensors; i++) {
         // clear the trig_pins
         digitalWrite(trig_pin[i], LOW);
@@ -58,17 +75,14 @@ void loop() {
         // read the sound wave travel time in microseconds
         duration[i] = pulseIn(echo_pin[i], HIGH);
 
-        // calculate the distance
-        distance[i] = duration[i] * speed_of_sound_constant / 2;
-
-        // send the distance on the serial connection
-        Serial.print("Distance: ");
-        Serial.println(distance[i]);
+        // calculate the distance in centimeters (range of 4000cm)
+        distance[i] = duration[i] * speed_of_sound_constant / 2.0;
     }
 
-    /* to replace the above serial connection eventually
     if ( car_has_passed() ) {
-        Serial.println("Car passed");
+        // signal the Pi on the relay pin
+        digitalWrite(relay_pin, HIGH);
+        delayMicroseconds(10);
     }
-    */
+    
 }
