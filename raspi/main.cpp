@@ -32,7 +32,7 @@ int main() {
     const int relay_pin = 0;
     const double cooldown_time_microsec = 1500000;
     const std::string host = "projects.cse.tamu.edu";
-    const std::string path = "domfabian1/index.php";
+    const std::string path = "easter97/index2.php";
     const int port = 80;
 
     pinMode(relay_pin, INPUT);
