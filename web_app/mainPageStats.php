@@ -1,6 +1,7 @@
 <?php
 	include('db_connection.php');
     $table_name = "CarDatabase";
+    $secretKey = "ourSecretArduinoKey";
 
 //Combines all functions from the original file that retrieve count and timestamp for month, day, etc.
 //Takes a string argument that is the period of time
@@ -110,7 +111,7 @@
         $DB_CONNECTION = new DbConnection($debug);
         $ave_people_query = $DB_CONNECTION->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
         $DB_CONNECTION->disconnect();
-
+        print_r($ave_people_query->fetchAll());
         return $ave_people_query->fetchAll();
     }
 
@@ -122,7 +123,28 @@
             $count += 1;
             $num += $row['count'];
         }
-        return $num/$count;
+        if($count==0)
+        {
+            return 0;
+        }
+        else
+        {
+            return $num/$count;
+        }
+    }
+     function predict() {
+        global $table_name;
+		$debug = false;
+		$DB_CONNECTION = new DbConnection($debug);
+        ini_set("date.timezone", "America/Chicago");
+        $hour = date('H');
+        $sql= "SELECT * from {$table_name} HAVING DATE_FORMAT(`time`, '%H')={$hour}";
+        
+        $DB_CONNECTION = new DbConnection($debug);
+        $pdo_statement = $DB_CONNECTION->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+        $DB_CONNECTION->disconnect();
+
+        return $pdo_statement->fetchAll();
     }
 
     //Returns the median of the data provided
@@ -212,4 +234,53 @@
         $DB_CONNECTION->disconnect();
         return true;
     }
+
+    function insertIntoDatabase($table) {
+        /* This function takes one parameter and returns an error code.
+           Parameter is the name of the database table.
+           Error code 0: could not insert into database.
+           Error code 1: successful insert into database. */
+        $debug = false;
+        $COMMON = new DbConnection($debug);
+        
+        $sql = "INSERT INTO $table (`time`) VALUES (CURRENT_TIMESTAMP);";
+        $rs = $COMMON->executeQuery($sql, $_SERVER['SCRIPT_NAME']);
+        if (empty($rs)) {
+            return 0;
+        }
+        else {
+            $row = $rs->fetch(PDO::FETCH_ASSOC);
+            return 1;
+        }    
+    }
+function handleArduinoPing($key) {
+        /* This function takes one parameter and returns an
+           integer error code. handleArduinoPing() is the script
+           run by the webserver whenever the Arduino of the
+           PedestrianCounter detects that somebody has walked by
+           and sends a message to the webserver. This function
+           will be called whenever a POST request is made to the
+           webserver. The function ensures that a specific $key is
+           provided in the body of the HTTP POST request before
+           sending any information to the database.
+           Parameter is a string key from the Arduino.
+           Error code 0: unable to handle Arduino ping (DB error).
+           Error code -1: invalid key provided by Arduino.
+           Error code 1: successful handle of Arduino ping. */
+        
+        $debug = false;
+        $COMMON = new DbConnection($debug);
+        global $secretKey;
+        global $table_name;
+
+        // check for invalid Arduino key or non-string input
+        if ($key != $secretKey) {
+            return -1;
+        }
+        else {
+            $statusCode = insertIntoDatabase($tableName);
+            return $statusCode;
+        }
+    }
+
 ?>

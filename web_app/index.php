@@ -203,12 +203,12 @@ function loadmain(){
             </p>
             <p>Predicted in the next hour:
             <?php
-               $ave_people = get_num_people_for_every("hour");
+               $ave_people = predict();
                 if(empty($ave_people)) {
                     $ave_people = 0;
                 } 
                 $ave = get_ave($ave_people);
-                echo "{$ave}";
+                echo "{$ave} people";
             ?>
             </p>
         </div>
