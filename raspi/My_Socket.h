@@ -16,6 +16,9 @@
 **
 ***********************************************/
 
+#ifndef __MY_SOCKET_H__
+#define __MY_SOCKET_H__
+
 // C-style includes
 #include <string.h>
 #include <sys/socket.h>
@@ -40,3 +43,5 @@ public:
     bool send_data(std::string data);
     std::string receive(int);
 };
+
+#endif
