@@ -72,14 +72,3 @@ int sendWebserverPing(std::string host, std::string path, std::string secret_key
 
     return 1;
 }
-
-int main() {
-
-    std::string host = "projects.cse.tamu.edu";
-    std::string path = "domfabian1/index.php";
-    std::string secret_key = "ourSecretArduinoKey";
-
-    int ret = sendWebserverPing(host, path, secret_key);
-    std::cout << "Our function returned: " << ret << std::endl;
-    return 0;
-}
