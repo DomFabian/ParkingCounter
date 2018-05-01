@@ -17,7 +17,7 @@
 void test_sendWebserverPing() {
     std::string good_host_1 = "projects.cse.tamu.edu";
     std::string bad_host_1 = "edu.tamu.cse.projects";
-    std::string good_path_1 = "index.php";
+    std::string good_path_1 = "/domfabian1/index.php";
     std::string bad_path_1 = "not/sure/where/to/go.php";
     std::string good_key = "ourSecretArduinoKey";
     std::string bad_key = "idkTheKey";
