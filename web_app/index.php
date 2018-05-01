@@ -1,22 +1,8 @@
 <?php
     include('mainPageStats.php');
+    $url=$_SERVER['REQUEST_URI'];
+    header("Refresh: 30; URL=$url");
 ?>
-<script>
-    $(document).ready(function(){
-    loadmain();
-});
-
-function loadmain(){
-    $("#live").load("index.php");
-    setTimeout(loadmain, 2000);
-}
-//function update() {
-//    $.get("index.php", function(data) {
-//        $("#live").html(data);
-//        window.setTimeout(update, 10000);
-//    });
-}
-</script>
 <html>
     <head>
         <style>
@@ -191,7 +177,7 @@ function loadmain(){
             </p>
         </div>
         <div class="live">
-            <p class="livetime">Real-time statistics:
+            <p class="livetime">Number of cars recorded to date:
             <?php
                 $num_people = peopleCount("all");
                                 $people = peopleStats("all");
@@ -207,8 +193,8 @@ function loadmain(){
                 if(empty($ave_people)) {
                     $ave_people = 0;
                 } 
-                $ave = get_ave($ave_people);
-                echo "{$ave} people";
+                $ave = get_pave($ave_people);
+                echo "{$ave} cars";
             ?>
             </p>
         </div>

@@ -111,12 +111,12 @@
         $DB_CONNECTION = new DbConnection($debug);
         $ave_people_query = $DB_CONNECTION->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
         $DB_CONNECTION->disconnect();
-        print_r($ave_people_query->fetchAll());
         return $ave_people_query->fetchAll();
     }
 
     //Returns the average of the data provided
     function get_ave($pdo_statement) {
+        
         $count = 0;
         $num = 0;
         foreach ($pdo_statement as $row) {
@@ -130,6 +130,40 @@
         else
         {
             return $num/$count;
+        }
+    }
+    //Gets the average for predictive 
+    function get_pave($pdo_statement) {
+//        print_r($pdo_statement);
+        $count = 0;
+        $num = 0;
+        $loop_count=0;
+        $curr_day=0;
+        foreach ($pdo_statement as $row) {
+            $loop_count+=1;
+            $timestamp = (string)$row['time'];
+            $day = substr($timestamp, 8,  2);
+//            $day_int= (int) day;
+            $add = 1;
+            if($loop_count==1)
+            {
+                $curr_day=$day;
+            }
+            if($day==$curr_day & $loop_count!=1)
+            {
+                $add=0;
+            }
+            $count += $add;
+            $num += 1;
+        }
+//        echo "The number of rows was {$count}\n    ";
+        if($count==0)
+        {
+            return 0;
+        }
+        else
+        {
+            return floor($num/7);
         }
     }
      function predict() {
