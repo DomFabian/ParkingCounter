@@ -10,6 +10,6 @@ Whenever power is supplied to the Arduino, the program will automatically begin 
 `apt-get install git && apt-get install g++` as root to install Git and G++.
 2. Then, clone the ParkingCounter repository to the Pi by running
 `git clone https://github.com/DomFabian/ParkingCounter.git`.
-..* *If you prefer to save a little memory on the Pi, you can then run*
+    * *If you prefer to save a little memory on the Pi, you can then run*
 `rm -rf arduino/ web_app/` *to get rid of unneeded code.*
 3. Finally, compile and run the source code with `g++ -o pi_code *.cpp && ./pi_code`
